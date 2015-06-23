@@ -38,7 +38,7 @@ def directions_from_fingerprint(fingerprint):
         '10': SW,
         '11': SE,
     }
-    for hex_byte in fingerprint.split(':'):
+    for hex_byte in _chunks(fingerprint, 2):
         binary = hex_byte_to_binary(hex_byte)
         # read each bit-pair in each word right-to-left (little endian)
         for bit_pair in bit_pairs(binary):
@@ -115,7 +115,9 @@ def drunken_bishop(fingerprint):
     room = stumble_around(fingerprint)
     return display_room(room)
 
-
+def _chunks(l, n):
+    n = max(1, n)
+    return [l[i:i + n] for i in range(0, len(l), n)]
 
 if __name__ == '__main__':
     import sys
@@ -123,5 +125,5 @@ if __name__ == '__main__':
         print 'usage: {} <fingerprint>'.format(sys.argv[0])
         sys.exit(1)
     fingerprint = sys.argv[1]
-    assert len(fingerprint) == 47, "a fingerprint looks liks this: 37:e4:6a:2d:48:38:1a:0a:f3:72:6d:d9:17:6b:bd:5e"
+    assert len(fingerprint) == 32, "a fingerprint looks liks this: 37e46a2d48381a0af3726dd9176bbd5e"
     print drunken_bishop(fingerprint)
